@@ -36,7 +36,7 @@ public:
         auto list = new tsl::elm::List();
 
         // Option 1: Type with Switch Keyboard
-        auto kbdItem = new tsl::elm::ListItem("⌨ Escribir busqueda con teclado...");
+        auto kbdItem = new tsl::elm::ListItem("[+] Escribir busqueda con teclado...");
         kbdItem->setClickListener([](u64 keys) {
             if (keys & HidNpadButton_A) {
                 char query[64] = {};
@@ -75,7 +75,7 @@ public:
         list->addItem(new tsl::elm::CategoryHeader("Busquedas Rapidas (config.json)"));
         for (uint8_t i = 0; i < g_uiState.preset_count; i++) {
             std::string preset = g_uiState.presets[i];
-            auto pItem = new tsl::elm::ListItem("🔍 " + preset);
+            auto pItem = new tsl::elm::ListItem("> " + preset);
             pItem->setClickListener([preset](u64 keys) {
                 if (keys & HidNpadButton_A) {
                     YtmClient::sendCommand(YTM_CMD_SEARCH, 0, preset.c_str());
@@ -151,7 +151,7 @@ public:
         // Live Now Playing Status Card (CustomDrawer)
         auto statusCard = new tsl::elm::CustomDrawer([](tsl::gfx::Renderer* r, s32 x, s32 y, s32 w, s32 h) {
             if (!g_connected) {
-                r->drawString("⚠ sys-ytmusic no detectado", false, x + 10, y + 25, 18, r->a(0xF55F));
+                r->drawString("[!] sys-ytmusic no detectado", false, x + 10, y + 25, 18, r->a(0xF55F));
                 r->drawString("Verifica que el sysmodule este activo.", false, x + 10, y + 50, 14, r->a(0xFCCF));
                 return;
             }
@@ -174,7 +174,7 @@ public:
             r->drawString(infoLine, false, x + 10, y + 68, 13, r->a(0xF0FA));
 
             char webLine[96];
-            snprintf(webLine, sizeof(webLine), "📱 Control Celular: http://%s:%u",
+            snprintf(webLine, sizeof(webLine), "Web Celular: http://%s:%u",
                      g_uiState.switch_ip, g_uiState.web_port ? g_uiState.web_port : 8181);
             r->drawString(webLine, false, x + 10, y + 90, 13, r->a(0xF8CF));
         });
@@ -183,7 +183,7 @@ public:
         // Playback Controls
         list->addItem(new tsl::elm::CategoryHeader("Controles (Y = Play/Pausa | L/R = Ant/Sig)"));
 
-        auto playPauseBtn = new tsl::elm::ListItem("⏯ Reproducir / Pausar");
+        auto playPauseBtn = new tsl::elm::ListItem("[>] Reproducir / Pausar");
         playPauseBtn->setClickListener([](u64 keys) {
             if (keys & HidNpadButton_A) {
                 YtmClient::sendCommand(YTM_CMD_PLAY_PAUSE);
@@ -193,7 +193,7 @@ public:
         });
         list->addItem(playPauseBtn);
 
-        auto nextBtn = new tsl::elm::ListItem("⏭ Siguiente Cancion");
+        auto nextBtn = new tsl::elm::ListItem("[>>] Siguiente Cancion");
         nextBtn->setClickListener([](u64 keys) {
             if (keys & HidNpadButton_A) {
                 YtmClient::sendCommand(YTM_CMD_NEXT);
@@ -203,7 +203,7 @@ public:
         });
         list->addItem(nextBtn);
 
-        auto prevBtn = new tsl::elm::ListItem("⏮ Cancion Anterior");
+        auto prevBtn = new tsl::elm::ListItem("[<<] Cancion Anterior");
         prevBtn->setClickListener([](u64 keys) {
             if (keys & HidNpadButton_A) {
                 YtmClient::sendCommand(YTM_CMD_PREV);
@@ -214,7 +214,7 @@ public:
         list->addItem(prevBtn);
 
         // Volume Stepper (A = +10%, X = -10%)
-        m_volItem = new tsl::elm::ListItem("🔊 Volumen Musica (A: +10% / X: -10%)",
+        m_volItem = new tsl::elm::ListItem("Volumen Musica (A: +10% / X: -10%)",
                                            std::to_string(g_uiState.volume_percent) + "%");
         m_volItem->setClickListener([this](u64 keys) {
             int vol = (int)g_uiState.volume_percent;
@@ -237,7 +237,7 @@ public:
         // Navigation & Library
         list->addItem(new tsl::elm::CategoryHeader("Explorar YouTube Music"));
 
-        auto searchNav = new tsl::elm::ListItem("🔍 Buscar Canciones / Mixes Rapidos...");
+        auto searchNav = new tsl::elm::ListItem("[?] Buscar Canciones / Mixes Rapidos...");
         searchNav->setClickListener([](u64 keys) {
             if (keys & HidNpadButton_A) {
                 tsl::changeTo<SearchResultsGui>();
@@ -247,7 +247,7 @@ public:
         });
         list->addItem(searchNav);
 
-        auto favNav = new tsl::elm::ListItem("⭐ Mis Favoritos y Cache SD...");
+        auto favNav = new tsl::elm::ListItem("[*] Mis Favoritos y Cache SD...");
         favNav->setClickListener([](u64 keys) {
             if (keys & HidNpadButton_A) {
                 tsl::changeTo<FavoritesGui>();
@@ -257,7 +257,7 @@ public:
         });
         list->addItem(favNav);
 
-        auto saveFavBtn = new tsl::elm::ListItem("💾 Guardar Cancion Actual en Favoritos");
+        auto saveFavBtn = new tsl::elm::ListItem("[+] Guardar Cancion Actual en Favoritos");
         saveFavBtn->setClickListener([](u64 keys) {
             if (keys & HidNpadButton_A) {
                 YtmClient::sendCommand(YTM_CMD_SAVE_CURRENT);
@@ -267,7 +267,7 @@ public:
         });
         list->addItem(saveFavBtn);
 
-        m_repeatItem = new tsl::elm::ListItem("🔁 Repetir Cancion Actual",
+        m_repeatItem = new tsl::elm::ListItem("[R] Repetir Cancion Actual",
                                               g_uiState.repeat_one ? "ON" : "OFF");
         m_repeatItem->setClickListener([this](u64 keys) {
             if (keys & HidNpadButton_A) {
@@ -283,7 +283,7 @@ public:
         // Cache Management Section
         list->addItem(new tsl::elm::CategoryHeader("Memoria y Cache SD (Modo Hibrido)"));
 
-        m_cacheToggleItem = new tsl::elm::ListItem("📦 Guardar Cache en SD",
+        m_cacheToggleItem = new tsl::elm::ListItem("[SD] Guardar Cache en SD",
                                                    g_uiState.cache_enabled ? "ON" : "OFF");
         m_cacheToggleItem->setClickListener([this](u64 keys) {
             if (keys & HidNpadButton_A) {
@@ -298,7 +298,7 @@ public:
 
         char mbStr[32];
         snprintf(mbStr, sizeof(mbStr), "%.1f MB", (float)g_uiState.cache_used_kb / 1024.0f);
-        m_clearCacheItem = new tsl::elm::ListItem("🗑️ Borrar Cache SD", mbStr);
+        m_clearCacheItem = new tsl::elm::ListItem("[X] Borrar Cache SD", mbStr);
         m_clearCacheItem->setClickListener([this](u64 keys) {
             if (keys & HidNpadButton_A) {
                 YtmClient::sendCommand(YTM_CMD_CLEAR_CACHE);

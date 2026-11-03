@@ -13,8 +13,8 @@ extern "C" {
     u32 __nx_applet_type = AppletType_None;
     u32 __nx_fs_num_sessions = 1;
 
-    // 5 MB inner heap to coexist peacefully with heavy Switch games
-    #define INNER_HEAP_SIZE 0x500000
+    // 1.5 MB inner heap so it fits easily alongside MissionControl, SaltyNX, and emuiibo
+    #define INNER_HEAP_SIZE 0x180000
     size_t nx_inner_heap_size = INNER_HEAP_SIZE;
     char   nx_inner_heap[INNER_HEAP_SIZE];
 
@@ -43,17 +43,18 @@ extern "C" {
         if (R_FAILED(rc)) diagAbortWithResult(MAKERESULT(Module_Libnx, LibnxError_InitFail_FS));
         fsdevMountSdmc();
 
-        // Compact socket configuration for sysmodule footprint (~512 KB total socket transfer memory)
+        // Ultra-compact page-aligned (0x1000) socket config (~112 KB transfer memory)
         SocketInitConfig sockCfg = *socketGetDefaultInitConfig();
-        sockCfg.tcp_tx_buf_size = 0x8000;
-        sockCfg.tcp_rx_buf_size = 0x10000;
-        sockCfg.tcp_tx_buf_max_size = 0x20000;
-        sockCfg.tcp_rx_buf_max_size = 0x40000;
-        sockCfg.udp_tx_buf_size = 0x2400;
-        sockCfg.udp_rx_buf_size = 0xA500;
-        sockCfg.sb_efficiency = 2;
-        sockCfg.num_bsd_sessions = 3;
+        sockCfg.tcp_tx_buf_size     = 0x4000;
+        sockCfg.tcp_rx_buf_size     = 0x8000;
+        sockCfg.tcp_tx_buf_max_size = 0x10000;
+        sockCfg.tcp_rx_buf_max_size = 0x20000;
+        sockCfg.udp_tx_buf_size     = 0x1000;
+        sockCfg.udp_rx_buf_size     = 0x1000;
+        sockCfg.sb_efficiency       = 2;
+        sockCfg.num_bsd_sessions    = 2;
         socketInitialize(&sockCfg);
+
         nifmInitialize(NifmServiceType_User);
         timeInitialize();
         csrngInitialize();

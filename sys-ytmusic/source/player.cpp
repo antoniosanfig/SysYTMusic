@@ -31,7 +31,7 @@ std::vector<YtmTrackInfo> g_history;
 // PCM Ring Buffer between network/decoder and audren thread
 Mutex g_pcmMutex;
 std::deque<int16_t> g_pcmFifo;
-constexpr size_t MAX_PCM_FIFO_SAMPLES = SAMPLE_RATE * CHANNELS * 6; // Max 6 seconds buffered in RAM (~1.1 MB)
+constexpr size_t MAX_PCM_FIFO_SAMPLES = SAMPLE_RATE * CHANNELS * 2; // Max 2 seconds buffered in RAM (~384 KB)
 
 // Async worker request
 Mutex g_workMutex;
