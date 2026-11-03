@@ -44,18 +44,15 @@ extern "C" {
         fsdevMountSdmc();
 
         // Compact socket configuration for sysmodule footprint (~512 KB total socket transfer memory)
-        static const SocketInitConfig sockCfg = {
-            .bsdsockets_version = 1,
-            .tcp_tx_buf_size = 0x8000,
-            .tcp_rx_buf_size = 0x10000,
-            .tcp_tx_buf_max_size = 0x20000,
-            .tcp_rx_buf_max_size = 0x40000,
-            .udp_tx_buf_size = 0x2400,
-            .udp_rx_buf_size = 0xA500,
-            .sb_efficiency = 2,
-            .num_bsd_sessions = 3,
-            .bsd_service_type = BsdServiceType_Auto,
-        };
+        SocketInitConfig sockCfg = *socketGetDefaultInitConfig();
+        sockCfg.tcp_tx_buf_size = 0x8000;
+        sockCfg.tcp_rx_buf_size = 0x10000;
+        sockCfg.tcp_tx_buf_max_size = 0x20000;
+        sockCfg.tcp_rx_buf_max_size = 0x40000;
+        sockCfg.udp_tx_buf_size = 0x2400;
+        sockCfg.udp_rx_buf_size = 0xA500;
+        sockCfg.sb_efficiency = 2;
+        sockCfg.num_bsd_sessions = 3;
         socketInitialize(&sockCfg);
         nifmInitialize(NifmServiceType_User);
         timeInitialize();

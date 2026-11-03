@@ -379,7 +379,7 @@ void audioThreadFunc(void* arg) {
                         mutexUnlock(&g_pcmMutex);
 
                         armDCacheFlush(dst, BYTES_PER_BUF);
-                        audrvVoiceAppendWaveBuf(&drv, 0, &wavebufs[i]);
+                        audrvVoiceAddWaveBuf(&drv, 0, &wavebufs[i]);
                         played_samples += SAMPLES_PER_BUF;
                     } else {
                         mutexUnlock(&g_pcmMutex);
