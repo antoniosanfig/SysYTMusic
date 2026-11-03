@@ -151,8 +151,8 @@ public:
         // Live Now Playing Status Card (CustomDrawer)
         auto statusCard = new tsl::elm::CustomDrawer([](tsl::gfx::Renderer* r, s32 x, s32 y, s32 w, s32 h) {
             if (!g_connected) {
-                r->drawString("⚠ sys-ytmusic no detectado", false, x + 10, y + 25, 18, r->a(0xFFFF5555));
-                r->drawString("Verifica que el sysmodule este activo.", false, x + 10, y + 50, 14, r->a(0xFFCCCCCC));
+                r->drawString("⚠ sys-ytmusic no detectado", false, x + 10, y + 25, 18, r->a(0xF55F));
+                r->drawString("Verifica que el sysmodule este activo.", false, x + 10, y + 50, 14, r->a(0xFCCF));
                 return;
             }
             const char* title = (g_uiState.current_track.title[0] != '\0')
@@ -162,8 +162,8 @@ public:
                                      ? g_uiState.current_track.artist
                                      : "Elige una cancion o busca en YT Music";
 
-            r->drawString(title, false, x + 10, y + 24, 18, r->a(0xFFFFFFFF));
-            r->drawString(artist, false, x + 10, y + 46, 14, r->a(0xFFAAAAAA));
+            r->drawString(title, false, x + 10, y + 24, 18, r->a(0xFFFF));
+            r->drawString(artist, false, x + 10, y + 46, 14, r->a(0xFAAA));
 
             char infoLine[128];
             snprintf(infoLine, sizeof(infoLine), "%s  |  %02u:%02u / %02u:%02u %s",
@@ -171,12 +171,12 @@ public:
                      g_uiState.elapsed_sec / 60, g_uiState.elapsed_sec % 60,
                      g_uiState.current_track.duration_sec / 60, g_uiState.current_track.duration_sec % 60,
                      g_uiState.current_track.is_cached ? "[CACHE SD]" : "");
-            r->drawString(infoLine, false, x + 10, y + 68, 13, r->a(0xFF00FFAA));
+            r->drawString(infoLine, false, x + 10, y + 68, 13, r->a(0xF0FA));
 
             char webLine[96];
             snprintf(webLine, sizeof(webLine), "📱 Control Celular: http://%s:%u",
                      g_uiState.switch_ip, g_uiState.web_port ? g_uiState.web_port : 8181);
-            r->drawString(webLine, false, x + 10, y + 90, 13, r->a(0xFF88CCFF));
+            r->drawString(webLine, false, x + 10, y + 90, 13, r->a(0xF8CF));
         });
         list->addItem(statusCard, 100);
 
