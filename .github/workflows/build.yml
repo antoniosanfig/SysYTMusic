@@ -16,10 +16,25 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
+      - name: Cache Switch Portlibs
+        id: cache-portlibs
+        uses: actions/cache@v4
+        with:
+          path: |
+            /opt/devkitpro/portlibs/switch
+            /opt/devkitpro/libnx
+          key: dkp-switch-portlibs-v1
+
       - name: Install Switch portlibs (libcurl, libopus, mbedtls, zlib)
+        if: steps.cache-portlibs.outputs.cache-hit != 'true'
         run: |
-          dkp-pacman -Syu --noconfirm
-          dkp-pacman -S --needed --noconfirm switch-dev switch-curl switch-libopus switch-mbedtls switch-zlib
+          sed -i 's|https://pkg.devkitpro.org|https://downloads.devkitpro.org|g' /opt/devkitpro/pacman/etc/pacman.conf || true
+          sed -i 's|https://pkg.devkitpro.org|https://downloads.devkitpro.org|g' /opt/devkitpro/pacman/etc/pacman.d/* || true
+          for i in 1 2 3; do
+            dkp-pacman -S --needed --noconfirm switch-dev switch-curl switch-libopus switch-mbedtls switch-zlib && break
+            dkp-pacman -Syu --noconfirm && dkp-pacman -S --needed --noconfirm switch-dev switch-curl switch-libopus switch-mbedtls switch-zlib && break
+            sleep 5
+          done
 
       - name: Fetch libtesla header library for Overlay
         run: |
