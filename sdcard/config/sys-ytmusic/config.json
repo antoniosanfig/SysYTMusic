@@ -1,0 +1,29 @@
+{
+  "default_volume": 80,
+  "cache_enabled": false,
+  "max_cache_mb": 250,
+  "web_port": 8181,
+  "custom_proxy_url": "",
+  "piped_instances": [
+    "https://pipedapi.kavin.rocks",
+    "https://pipedapi.tokhmi.xyz",
+    "https://api.piped.private.coffee",
+    "https://pipedapi.smnz.de"
+  ],
+  "invidious_instances": [
+    "https://inv.nadeko.net",
+    "https://invidious.nerdvpn.de",
+    "https://invidious.privacyredirect.com",
+    "https://yewtu.be"
+  ],
+  "quick_presets": [
+    "Lofi Hip Hop Beats Mix",
+    "Synthwave Gaming Mix",
+    "Zelda Chill LoFi Mix",
+    "Mario Kart 8 OST",
+    "Rock en Espanol Clasicos",
+    "Bad Bunny Exitos",
+    "Anime Openings Mix",
+    "phonk workout mix"
+  ]
+}

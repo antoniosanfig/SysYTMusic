@@ -1,0 +1,11 @@
+# Build artifacts
+*/build/
+*.elf
+*.nso
+*.npdm
+*.nacp
+*.ovl
+*.nsp
+dist/
+ovl-ytmusic/lib/
+__pycache__/

@@ -1,0 +1,55 @@
+name: Build sys-ytmusic & Tesla Overlay
+
+on:
+  push:
+    branches: [ "main", "master" ]
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    container:
+      image: devkitpro/devkita64:latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Install Switch portlibs (libcurl, libopus, mbedtls, zlib)
+        run: |
+          dkp-pacman -Syu --noconfirm
+          dkp-pacman -S --needed --noconfirm switch-dev switch-curl switch-libopus switch-mbedtls switch-zlib
+
+      - name: Fetch libtesla header library for Overlay
+        run: |
+          mkdir -p ovl-ytmusic/lib
+          git clone --depth 1 https://github.com/WerWolv/libtesla.git ovl-ytmusic/lib/libtesla
+
+      - name: Compile sys-ytmusic (Background Sysmodule)
+        run: |
+          make -C sys-ytmusic -j$(nproc)
+
+      - name: Compile ovl-ytmusic (Tesla Overlay)
+        run: |
+          make -C ovl-ytmusic -j$(nproc)
+
+      - name: Package SD Card Release (.zip)
+        run: |
+          mkdir -p dist/atmosphere/contents/420000000000D609/flags
+          mkdir -p dist/switch/.overlays
+          mkdir -p dist/config/sys-ytmusic/cache
+
+          cp sys-ytmusic/exefs.nsp dist/atmosphere/contents/420000000000D609/exefs.nsp
+          cp sdcard/atmosphere/contents/420000000000D609/toolbox.json dist/atmosphere/contents/420000000000D609/toolbox.json
+          touch dist/atmosphere/contents/420000000000D609/flags/boot2.flag
+
+          cp ovl-ytmusic/ovl-ytmusic.ovl dist/switch/.overlays/ovl-ytmusic.ovl
+          cp sdcard/config/sys-ytmusic/config.json dist/config/sys-ytmusic/config.json
+          cp sdcard/config/sys-ytmusic/playlists.json dist/config/sys-ytmusic/playlists.json
+
+      - name: Upload Ready-to-Install SD Card Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: sys-ytmusic-SD-Package
+          path: dist/
