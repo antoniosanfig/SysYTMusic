@@ -45,6 +45,7 @@ jobs:
           touch dist/atmosphere/contents/420000000000D609/flags/boot2.flag
 
           cp ovl-ytmusic/ovl-ytmusic.ovl dist/switch/.overlays/ovl-ytmusic.ovl
+          cp ovl-ytmusic/ovl-ytmusic.ovl dist/ovl-ytmusic.ovl
           cp sdcard/config/sys-ytmusic/config.json dist/config/sys-ytmusic/config.json
           cp sdcard/config/sys-ytmusic/playlists.json dist/config/sys-ytmusic/playlists.json
 
@@ -53,3 +54,4 @@ jobs:
         with:
           name: sys-ytmusic-SD-Package
           path: dist/
+          include-hidden-files: true
